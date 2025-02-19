@@ -13,11 +13,17 @@ python3 rag_ollama_basic.py
 # incident-resolution-v2-streamlit-langchain
 
 Ollama needed
-(Create venv)
+Start ollama.
+
+Chroma DB as inmemory vector DB
+(Create venv) -- good pracc
+
 pip install -r requirements.txt
+
 streamlit run ui.py
 
-UI opens up
+
+UI running on localhost.
 Index documents located in "incidents" folder
 Talk to LLM Bot
 
