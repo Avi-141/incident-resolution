@@ -1,5 +1,5 @@
-import ollama # type: ignore
-from tqdm import tqdm # type: ignore
+import ollama
+from tqdm import tqdm
 
 
 def __pull_model(name: str) -> None:

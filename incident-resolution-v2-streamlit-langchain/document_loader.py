@@ -17,9 +17,6 @@ def load_documents_into_database(model_name: str, documents_path: str) -> Chroma
     """
     Loads documents from the specified directory into the Chroma database
     after splitting the text into chunks.
-
-    Returns:
-        Chroma: The Chroma database with loaded documents.
     """
 
     print("Loading documents")
@@ -35,23 +32,6 @@ def load_documents_into_database(model_name: str, documents_path: str) -> Chroma
 
 
 def load_documents(path: str) -> List[Document]:
-    """
-    Loads documents from the specified directory path.
-
-    This function supports loading of PDF, Markdown, and HTML documents by utilizing
-    different loaders for each file type. It checks if the provided path exists and
-    raises a FileNotFoundError if it does not. It then iterates over the supported
-    file types and uses the corresponding loader to load the documents into a list.
-
-    Args:
-        path (str): The path to the directory containing documents to load.
-
-    Returns:
-        List[Document]: A list of loaded documents.
-
-    Raises:
-        FileNotFoundError: If the specified path does not exist.
-    """
     if not os.path.exists(path):
         raise FileNotFoundError(f"The specified path does not exist: {path}")
 
@@ -69,6 +49,12 @@ def load_documents(path: str) -> List[Document]:
             loader_cls=TextLoader,
             show_progress=True,
         ),
+        ".txt": DirectoryLoader(
+            path,
+            glob="**/*.txt",
+            loader_cls=TextLoader,
+            show_progress=True,
+        ),
     }
 
     docs = []
@@ -76,32 +62,3 @@ def load_documents(path: str) -> List[Document]:
         print(f"Loading {file_type} files")
         docs.extend(loader.load())
     return docs
-
-    """
-    Creates a HybridRetriever that combines BM25 and Chroma-based retrieval,
-    and sets up a re-ranker chain using an LLM.
-
-    Args:
-        model_name (str): The model name for the embeddings.
-        documents_path (str): The path to the directory containing documents to load.
-
-    Returns:
-        tuple: The hybrid retriever and the re-ranker chain.
-    """
-    # Load documents and create Chroma vector store
-    db = load_documents_into_database(model_name, documents_path)
-
-    # Create BM25 retriever
-    documents = db.get_all_documents()
-    bm25_retriever = BM25Retriever.from_documents(documents)
-
-    # Combine them into a hybrid retriever
-    hybrid_retriever = HybridRetriever(retrievers=[db.as_retriever(), bm25_retriever])
-
-    # Initialize the LLM for re-ranking
-    llm = OpenAI()
-
-    # Set up the re-ranker chain
-    reranker = ReRankerChain(llm=llm, retriever=hybrid_retriever)
-
-    return hybrid_retriever, reranker

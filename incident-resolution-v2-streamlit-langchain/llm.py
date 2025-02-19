@@ -1,12 +1,12 @@
 from operator import itemgetter
 
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler # type: ignore
-from langchain.memory import ConversationBufferMemory # type: ignore
-from langchain_core.prompts import ChatPromptTemplate # type: ignore
-from langchain_core.runnables import RunnableLambda, RunnablePassthrough # type: ignore
-from langchain_core.messages import get_buffer_string # type: ignore
-from langchain_core.prompts import format_document # type: ignore
-from langchain.prompts.prompt import PromptTemplate # type: ignore
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler 
+from langchain.memory import ConversationBufferMemory 
+from langchain_core.prompts import ChatPromptTemplate 
+from langchain_core.runnables import RunnableLambda, RunnablePassthrough 
+from langchain_core.messages import get_buffer_string 
+from langchain_core.prompts import format_document 
+from langchain.prompts.prompt import PromptTemplate 
 
 #WizardLM2 Prompt for best results
 #A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. #USER: Hi ASSISTANT: Hello.</s>USER: Who are you? ASSISTANT: I am WizardLM.</s>......
@@ -86,6 +86,7 @@ def getStreamingChain(question: str, memory, llm, db):
 
 
 def getChatChain(llm, db):
+    # How many results? Top-K
     retriever = db.as_retriever(search_kwargs={"k": 10})
 
     loaded_memory = RunnablePassthrough.assign(

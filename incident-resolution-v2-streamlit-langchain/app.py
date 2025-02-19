@@ -1,10 +1,4 @@
-from langchain_community.llms import Ollama # type: ignore
-from langchain_community.embeddings import OllamaEmbeddings # type: ignore
-from langchain.text_splitter import RecursiveCharacterTextSplitter # type: ignore
-from langchain_community.vectorstores import Chroma # type: ignore
-# from langchain.retrievers import BM25Retriever, HybridRetriever #type: ignore
-# Weaviate Hybrid search chroma
-#from langchain.chains import ReRankerChain
+from langchain_community.llms import Ollama
 
 from models import check_if_model_is_available
 from document_loader import load_documents_into_database
@@ -13,9 +7,9 @@ import sys
 
 from llm import getChatChain
 
+# Terminal based interface..
 
 def main(llm_model_name: str, embedding_model_name: str, documents_path: str) -> None:
-    # Check to see if the models available, if not attempt to pull them
     try:
         check_if_model_is_available(llm_model_name)
         check_if_model_is_available(embedding_model_name)
@@ -23,12 +17,8 @@ def main(llm_model_name: str, embedding_model_name: str, documents_path: str) ->
         print(e)
         sys.exit()
 
-    # Creating database form documents
     try:
         db = load_documents_into_database(embedding_model_name, documents_path)
-        # documents = db.get_all_documents()
-        # bm25_retriever = BM25Retriever.from_documents(documents)
-        # #hybrid_retriever = HybridRetriever(retrievers=[db.as_retriever(), bm25_retriever])
     except FileNotFoundError as e:
         print(e)
         sys.exit()
@@ -67,7 +57,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "-p",
         "--path",
-        default="Research",
+        default="incidents",
         help="The path to the directory containing documents to load.",
     )
     return parser.parse_args()

@@ -1,16 +1,16 @@
-import streamlit as st  # type: ignore
+import streamlit as st
 import os
 
-from langchain_community.llms import Ollama  # type: ignore
+from langchain_community.llms import Ollama 
 from document_loader import load_documents_into_database
 from models import get_list_of_models
 from llm import getStreamingChain
 
-EMBEDDING_MODEL = "nomic-embed-text"
+EMBEDDING_MODEL = "nomic-embed-text" # needs to be pre-fetched from Ollama
 PATH = "incidents"
 
 
-st.title("Local LLM with RAG")
+st.title("RAG for incident resolution")
 
 if "list_of_models" not in st.session_state:
     st.session_state["list_of_models"] = get_list_of_models()
@@ -24,9 +24,7 @@ if st.session_state.get("ollama_model") != selected_model:
     st.session_state["llm"] = Ollama(model=selected_model)
 
 
-# Folder selection
 folder_path = st.sidebar.text_input("Enter the folder path:", PATH)
-
 if folder_path:
     if not os.path.isdir(folder_path):
         st.error(
@@ -45,11 +43,9 @@ if folder_path:
 else:
     st.warning("Please enter a folder path to load documents into the database.")
 
-# Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat messages from history on app rerun
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
