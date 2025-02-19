@@ -1,0 +1,14 @@
+cloudpickle
+#faiss-cpu #Use faiss-gpu if you are using GPUs #seg fault
+chromadb
+transformers
+sentence-transformers
+langchain
+langchain-community
+langchain-huggingface
+flask
+torch 
+torchvision 
+torchaudio
+
+# THIS IS NOT REQUIRED.. IGNORE
